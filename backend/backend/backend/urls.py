@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from api.views import signup
+from api.views import signup, MyAccountView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -13,4 +13,5 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     # Signup endpoint
     path('api/signup/', signup, name='signup'),
+    path('api/my-account/', MyAccountView.as_view(), name='my-account'),
 ]
