@@ -13,6 +13,10 @@ class Activity(models.Model):
         verbose_name="Users who completed it", 
         blank=True,
     )
+    image = models.ImageField(upload_to='activities/', blank=True, null=True)
+    time_hours = models.IntegerField(default=0, verbose_name="Time (hours)")
+    weather = models.IntegerField(default=0, verbose_name="Weather Indication")
+    star_rating = models.FloatField(default=0.0, verbose_name="Star Rating")
     def __str__(self):
         return self.title
 

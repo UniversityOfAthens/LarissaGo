@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -18,4 +20,4 @@ urlpatterns = [
     path('api/activities/<int:pk>/', ActivityDetailView.as_view(), name='activity-detail'),
     path('api/rewards/', RewardListView.as_view(), name='rewards'),
     path('api/rewards/<int:pk>/', RedeemRewardView.as_view(), name='reward-redeem'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
