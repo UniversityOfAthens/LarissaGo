@@ -19,7 +19,7 @@ export default function Dashboard() {
   };
 
   return (
-    <View style={tw`flex-1`}>
+  <View style={tw`flex-1 bg-indigo-500`}>
         {/* Header with the account icon */}
         <View style={tw`flex-row justify-between items-center p-4 border-b border-gray-200 rounded-sm`}>
           <Text style={tw`text-xl font-bold`}>Dashboard</Text>
@@ -29,10 +29,9 @@ export default function Dashboard() {
           </TouchableOpacity>
         </View>
 
-        <Text className='center glass'>
-          <Text>Explore Larissa</Text>
-        </Text>
-        
+        <View style={tw `h-full w-full bg-green-400 rounded-md bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-gray-100`}>
+            <Text>Explore Larissa</Text>
+        </View>
         
         {/* <View style={tw 'flex-auto items-center'}></> */}
 
@@ -44,6 +43,6 @@ export default function Dashboard() {
             <Text style={tw`text-white text-2xl`}>Play</Text>
           </TouchableOpacity>
         </View>
-    </View>
+  </View>
   );
 }
