@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
+import { Image } from 'react-native';
 import tw from 'twrnc';
 
 interface Reward {
@@ -98,22 +99,18 @@ const Rewards = () => {
     }
   };
 
-  // Optional: define a few coupon background colors to randomly pick from
-  const couponColors = ['bg-red-500', 'bg-yellow-500', 'bg-teal-500'];
-
   // Render a single reward item
   const renderReward = ({ item }: { item: Reward }) => {
-    // Pick a random color for the coupon background
-    const colorClass =
-      couponColors[Math.floor(Math.random() * couponColors.length)];
+    // Generate a random HSL color for the coupon background
+    const randomColor = `hsl(${Math.random() * 360}, 70%, 80%)`;
 
     return (
       <View style={tw`mb-4`}>
         {/* Outer container to mimic coupon shape */}
-        <View style={tw`rounded-xl flex-row items-center p-4 ${colorClass}`}>
+        <View style={[tw`rounded-xl flex-row items-center p-4`, { backgroundColor: randomColor }]}>
           {/* Left side: points needed in big text */}
           <View style={tw`mr-4`}>
-            <Text style={tw`text-white text-2xl font-bold`}>
+            <Text style={tw`text-black text-2xl font-bold`}>
               {item.points_needed} pts
             </Text>
           </View>
@@ -121,28 +118,17 @@ const Rewards = () => {
           {/* Right side: coupon info */}
           <View style={tw`flex-1`}>
             {/* Big title in white */}
-            <Text style={tw`text-white text-xl font-bold mb-1`}>
+            <Text style={tw`text-black text-xl font-bold mb-1`}>
               {item.title.toUpperCase()}
             </Text>
-
             {/* Redeem / Earn more button */}
             <TouchableOpacity
-              style={tw`border border-white px-3 py-1 rounded-full mt-2 self-start`}
+              style={tw`border border-gray-500 px-3 py-1 rounded-full mt-2 self-start`}
               onPress={() => handleRedeem(item.id, item.can_purchase)}
             >
-              <Text style={tw`text-white text-sm`}>{item.action}</Text>
+              <Text style={tw`text-black text-sm`}>{item.action}</Text>
             </TouchableOpacity>
           </View>
-
-          {/* If you want a scissor icon on the right side, uncomment below:
-          
-            <MaterialCommunityIcons
-              name="content-cut"
-              size={24}
-              color="#fff"
-              style={tw`ml-3`}
-            />
-          */}
         </View>
       </View>
     );
@@ -167,9 +153,7 @@ const Rewards = () => {
   return (
     <View style={tw`flex-1 p-4`}>
       <TouchableOpacity
-        style={[
-          tw`absolute top-8 left-5 z-10 p-2 bg-white rounded-xl`,
-        ]}
+        style={[tw`absolute top-8 left-5 z-10 p-2 bg-white rounded-xl`]}
         onPress={() => router.push('/dashboard')}
       >
         <Text style={tw`font-bold text-black`}>Back</Text>
