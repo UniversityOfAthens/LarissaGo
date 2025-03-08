@@ -19,7 +19,7 @@ export default function Dashboard() {
   };
 
   return (
-    <View style={tw`flex-1 h-14 bg-linear-to-t from-sky-500 to-indigo-500 backgroundmain`}>
+    <View style={tw`flex-1 backgroundmain`}>
       {/* Header with the account icon */}
       <View style={tw`flex-row justify-between items-center p-4 border-b border-gray-200 rounded-sm`}>
         <Text style={tw`text-xl font-bold`}>Dashboard</Text>
