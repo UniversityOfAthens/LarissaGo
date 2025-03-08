@@ -91,7 +91,7 @@ class RewardListView(APIView):
                 "title": reward.title,
                 "points_needed": reward.points_needed,
                 "can_purchase": can_purchase,
-                "action": "Redeem" if can_purchase else "Earn more"
+                "action": "Redeem" if can_purchase else "Not enough points. Earn more!"
             })
         return Response(data)
     
