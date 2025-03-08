@@ -5,8 +5,9 @@ import json
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .serializers import UserSerializer
-from api.models import CustomUser
+from .serializers import UserSerializer, ActivitySerializer
+from api.models import CustomUser, Activity
+from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def signup(request):
@@ -34,4 +35,12 @@ class MyAccountView(APIView):
 
     def get(self, request):
         serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+    
+class ActivityListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        activities = Activity.objects.all()
+        serializer = ActivitySerializer(activities, many=True)
         return Response(serializer.data)
