@@ -20,7 +20,7 @@ export default function Dashboard() {
 
   return (
     <View style={tw`flex-1`}>
-      <div className="backgroundmain">
+      <div className='backgroundmain'>
         {/* Header with the account icon */}
         <View style={tw`flex-row justify-between items-center p-4 border-b border-gray-200 rounded-sm`}>
           <Text style={tw`text-xl font-bold`}>Dashboard</Text>
@@ -29,6 +29,10 @@ export default function Dashboard() {
             onPress={handleAccountPress} />
           </TouchableOpacity>
         </View>
+
+        <div className='center glass'>
+          <h1>Explore Larissa</h1>
+        </div>
         
         
         {/* <View style={tw 'flex-auto items-center'}></> */}
