@@ -13,12 +13,11 @@ export default function Dashboard() {
 
   // Optionally, you can add a handler for the "Play" button if needed.
   const handlePlayPress = () => {
-    // Navigate to the game screen or perform any action.
-    console.log('Play pressed');
+    router.push('/activities'); 
   };
 
   return (
-    <View style={tw`flex-1`}>
+    <View style={tw`flex-1 bg-green-200`}>
       {/* Header with the account icon */}
       <View style={tw`flex-row justify-between items-center p-4 border-b border-gray-200`}>
         <Text style={tw`text-xl font-bold`}>Dashboard</Text>
@@ -30,7 +29,8 @@ export default function Dashboard() {
 
       <View style={tw`flex-1 justify-center items-center`}>
         <TouchableOpacity 
-          style={tw`bg-blue-500 py-3 px-8 rounded`} 
+          style={tw`bg-blue-500 py-3 px-8 rounded`}
+          onPress={handlePlayPress} 
         >
           <Text style={tw`text-white text-2xl`}>Play</Text>
         </TouchableOpacity>

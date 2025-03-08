@@ -47,6 +47,10 @@ export default function RootLayout() {
           name="account"
           options={{ title: 'Account' }}
         />
+        <Stack.Screen 
+          name="activities"
+          options={{ title: 'Activities' }}
+        />
 
         {/* Existing screens */}
         <Stack.Screen 
