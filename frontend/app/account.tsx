@@ -1,9 +1,19 @@
 // MyAccount.tsx
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  TouchableOpacity,
+  Image,
+  ScrollView
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import tw from 'twrnc';
 import { useRouter } from 'expo-router';
+
+// Replace with the path to your default avatar image:
+const DEFAULT_AVATAR = require('./../public/default-avatar.png');
 
 interface User {
   username: string;
@@ -67,19 +77,82 @@ const MyAccount = () => {
   }
 
   return (
-    <View style={tw`flex-1 p-4`}>
-      <Text style={tw`text-xl mb-4`}>My Account</Text>
-      <Text style={tw`text-lg mb-2`}>Username: {user?.username}</Text>
-      <Text style={tw`text-lg mb-2`}>Email: {user?.email}</Text>
-      <Text style={tw`text-lg`}>Points: {user?.points}</Text>
+    <ScrollView style={tw`flex-1 bg-blue-50`}>
+      {/* Header Section (Profile Info) */}
+      <View style={tw`bg-green-300 p-6 rounded-b-3xl items-center`}>
+        {/* Avatar */}
+        <Image
+          source={DEFAULT_AVATAR}
+          style={tw`w-24 h-24 rounded-full mb-3`}
+        />
 
-      <TouchableOpacity
-        style={tw`bg-blue-500 py-2 px-4 rounded mt-6`}
-        onPress={() => router.push('/rewards')}
-      >
-        <Text style={tw`text-white text-center text-lg`}>Redeem your points!</Text>
-      </TouchableOpacity>
-    </View>
+        {/* User Info */}
+        <Text style={tw`text-2xl font-bold text-gray-800`}>
+          {user?.username || 'Guest User'}
+        </Text>
+        <Text style={tw`text-base text-gray-700`}>
+          {user?.email || 'No email'}
+        </Text>
+
+        {/* Points */}
+        <View style={tw`mt-3 bg-white px-4 py-2 rounded-2xl`}>
+          <Text style={tw`text-base text-gray-700`}>
+            Points: {user?.points ?? 0}
+          </Text>
+        </View>
+      </View>
+
+      {/* Main Content */}
+      <View style={tw`px-4 pt-4 pb-8`}>
+        {/* Actions Row */}
+        <View style={tw`flex-row justify-around mb-6`}>
+          <TouchableOpacity
+            style={tw`bg-blue-500 py-2 px-4 rounded-full`}
+            onPress={() => router.push('/activities')}
+          >
+            <Text style={tw`text-white font-semibold`}>Explore Activities</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={tw`bg-green-500 py-2 px-4 rounded-full`}
+            onPress={() => router.push('/rewards')}
+          >
+            <Text style={tw`text-white font-semibold`}>Redeem Points</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Example Section: Activities Just for You */}
+        <Text style={tw`text-lg font-bold text-gray-800 mb-3`}>
+          Activities Just For You
+        </Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {/* In a real app, you'd map over some random or recommended activities */}
+          <View style={tw`bg-white mr-3 p-4 rounded-lg w-48`}>
+            <Text style={tw`text-base font-bold mb-1`}>Activity 1</Text>
+            <Text style={tw`text-sm text-gray-600`}>Short description here</Text>
+          </View>
+          <View style={tw`bg-white mr-3 p-4 rounded-lg w-48`}>
+            <Text style={tw`text-base font-bold mb-1`}>Activity 2</Text>
+            <Text style={tw`text-sm text-gray-600`}>Short description here</Text>
+          </View>
+          <View style={tw`bg-white mr-3 p-4 rounded-lg w-48`}>
+            <Text style={tw`text-base font-bold mb-1`}>Activity 3</Text>
+            <Text style={tw`text-sm text-gray-600`}>Short description here</Text>
+          </View>
+        </ScrollView>
+
+        {/* Other sections / user data if needed */}
+        <View style={tw`mt-6`}>
+          <Text style={tw`text-lg font-bold text-gray-800 mb-2`}>
+            Additional Info
+          </Text>
+          <Text style={tw`text-sm text-gray-600`}>
+            Here you could display more fields about the user, e.g. phone number, 
+            address, membership level, or anything else relevant to your app.
+          </Text>
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 

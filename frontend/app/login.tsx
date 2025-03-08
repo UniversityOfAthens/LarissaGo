@@ -60,7 +60,7 @@ const Login = () => {
       {/* Top container with an image, curved bottom border */}
       <View style={styles.imageContainer}>
         <Image
-          source={require('../public/larisanight.jpg')}
+          source={require('../public/kastro.jpg')}
           style={styles.image}
         />
       </View>
