@@ -1,4 +1,3 @@
-// shapeUtils.js
 export const randomShapePath = () => {
     // Define a few simple polygon paths
     const shapes = [

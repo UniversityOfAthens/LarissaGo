@@ -1,15 +1,25 @@
+// activities.tsx
 import React, { useState, useEffect } from 'react';
-import { View, Text, ActivityIndicator, FlatList } from 'react-native';
+import { View, Text, ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import tw from 'twrnc';
 import Svg, { Path, Text as SVGText } from 'react-native-svg';
+import { useRouter } from 'expo-router';
+
+interface Activity {
+  id: number;
+  title: string;
+  description: string;
+  points: number;
+}
 
 const Activities = () => {
-  const [activities, setActivities] = useState([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const API_URL = 'http://10.0.2.2:8000/api/activities/';
+  const router = useRouter();
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -58,18 +68,14 @@ const Activities = () => {
     );
   }
 
-  // Helper to compute polygon width based on title length
+  // Helper functions to compute dimensions and polygon path
   const getDimensionsForTitle = (title: string) => {
-    // 12px per character, minimum width 100
     const width = Math.max(100, title.length * 12);
-    const height = 60; // fixed height
+    const height = 60;
     return { width, height };
   };
 
-  // Create a slightly "pointy" polygon path that spans the given width/height
   const getPolygonPath = (width: number, height: number) => {
-    // A 6-sided shape: left and right edges are "pointy"
-    // Adjust as you like for more interesting shapes
     return `
       M 10,0
       L ${width - 10},0
@@ -81,32 +87,30 @@ const Activities = () => {
     `;
   };
 
-  const renderActivity = ({ item }: any) => {
+  const renderActivity = ({ item }: { item: Activity }) => {
     const { width, height } = getDimensionsForTitle(item.title);
     const path = getPolygonPath(width, height);
-
-    // Generate a random pastel color using HSL
     const randomColor = `hsl(${Math.random() * 360}, 70%, 80%)`;
 
     return (
-      <View style={tw`mb-5`}>
-        <Svg width={width} height={height}>
-          {/* Polygon background */}
-          <Path d={path} fill={randomColor} />
-          {/* Centered text inside the polygon */}
-          <SVGText
-            x={width / 2}
-            y={height / 2}
-            fill="black"
-            fontSize="16"
-            fontWeight="bold"
-            textAnchor="middle"
-            alignmentBaseline="middle"
-          >
-            {item.title}
-          </SVGText>
-        </Svg>
-      </View>
+      <TouchableOpacity onPress={() => router.push(`/activity/${item.id}`)}>
+        <View style={tw`mb-5`}>
+          <Svg width={width} height={height}>
+            <Path d={path} fill={randomColor} />
+            <SVGText
+              x={width / 2}
+              y={height / 2}
+              fill="black"
+              fontSize="16"
+              fontWeight="bold"
+              textAnchor="middle"
+              alignmentBaseline="middle"
+            >
+              {item.title}
+            </SVGText>
+          </Svg>
+        </View>
+      </TouchableOpacity>
     );
   };
 

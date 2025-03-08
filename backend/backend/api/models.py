@@ -8,7 +8,7 @@ class Activity(models.Model):
     points = models.IntegerField(default=1, verbose_name="Points")
     title = models.CharField(max_length=255, blank=False, verbose_name="Title")
     description = models.TextField(blank=True, verbose_name="Description")
-    models.ManyToManyField(
+    completed_by = models.ManyToManyField(
         "api.CustomUser", 
         verbose_name="Users who completed it", 
         blank=True,
