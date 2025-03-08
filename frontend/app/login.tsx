@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import tw from 'twrnc';
+import { useRouter } from 'expo-router';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const handleLogin = async () => {
     try {
@@ -27,7 +29,13 @@ const Login = () => {
       // Save tokens using AsyncStorage
       await AsyncStorage.setItem('accessToken', data.access);
       await AsyncStorage.setItem('refreshToken', data.refresh);
-      Alert.alert('Login Successful', 'You are now logged in!');
+      
+      Alert.alert('Login Successful', 'You are now logged in!', [
+        {
+          text: 'OK',
+          onPress: () => router.replace('/dashboard'),
+        },
+      ]);
     } catch (error) {
       console.error(error);
       Alert.alert('Error', 'An error occurred. Please try again later.');

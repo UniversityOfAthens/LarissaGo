@@ -39,6 +39,10 @@ export default function RootLayout() {
           name="signup" 
           options={{ title: 'Sign Up' }} 
         />
+        <Stack.Screen 
+          name="dashboard" 
+          options={{ title: 'Dashboard' }}
+        />
 
         {/* Existing screens */}
         <Stack.Screen 
