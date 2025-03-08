@@ -1,49 +1,64 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import tw from 'twrnc';
-import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import '../style/main.css';
 
-export default function Dashboard() {
+const Dashboard = () => {
   const router = useRouter();
 
-  const handleAccountPress = () => {
-    router.push('/account'); // Ensure you have an account.tsx screen or adjust accordingly.
-  };
-
-  // Optionally, you can add a handler for the "Play" button if needed.
-  const handlePlayPress = () => {
-    // Navigate to the game screen or perform any action.
-    router.push('/activities');
-  };
-
   return (
-    <View style={tw`flex-1`}>
-        {/* Header with the account icon */}
-        <View style={tw`flex-row justify-between items-center p-4 border-b border-gray-200 rounded-sm`}>
-          <Text style={tw`text-xl font-bold`}>Dashboard</Text>
-          <TouchableOpacity>
-            <Ionicons name="person-circle-outline" size={32} color="black"
-            onPress={handleAccountPress} />
-          </TouchableOpacity>
-        </View>
+    <View style={tw`flex-1 bg-white`}>
+      {/* Top container with an image, curved bottom border */}
+      <View style={styles.imageContainer}>
+        <Image
+          source={require('../public/larisa.jpg')}
+          style={styles.image}
+        />
+      </View>
 
-        <Text className='center glass'>
-          <Text>Explore Larissa</Text>
-        </Text>
-        
-        
-        {/* <View style={tw 'flex-auto items-center'}></> */}
+      {/* Content section */}
+      <View style={tw`flex-1 items-center pb-24 justify-center px-4`}>
+        {/* Title */}
+        <Text style={tw`text-2xl font-bold mb-2 py-8`}>Welcome to LarissaGo!</Text>
 
-        <View style={tw`flex-1 justify-center items-center`}>
-          <TouchableOpacity 
-            style={tw`bg-blue-500 py-3 px-8 rounded`} 
-            onPress={handlePlayPress}
-          >
-            <Text style={tw`text-white text-2xl`}>Play</Text>
-          </TouchableOpacity>
-        </View>
+        {/* Buttons */}
+        <TouchableOpacity
+          style={tw`bg-blue-500 py-3 px-6 rounded-full mb-4 w-3/4`}
+          onPress={() => router.push('/activities')}
+        >
+          <Text style={tw`text-white text-lg text-center`}>Explore</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={tw`bg-green-500 py-3 px-6 rounded-full w-3/4`}
+          onPress={() => router.push('/rewards')}
+        >
+          <Text style={tw`text-white text-lg text-center`}>Redeem your points</Text>
+        </TouchableOpacity>
+
+        {/* Additional link to My Account */}
+        <TouchableOpacity onPress={() => router.push('/account')} style={tw`mt-4`}>
+          <Text style={tw`text-green-500 text-lg text-center`}>My account</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
-}
+};
+
+// Example of combining Tailwind + manual style for curved borders
+const styles = StyleSheet.create({
+  imageContainer: {
+    width: '100%',
+    height: '40%', // Adjust as needed
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+    overflow: 'hidden', // Ensures the image is clipped to the border radius
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover', // Ensures the image covers the container
+  },
+});
+
+export default Dashboard;

@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserSerializer, ActivitySerializer
-from api.models import CustomUser, Activity
+from api.models import CustomUser, Activity, Reward
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
@@ -77,3 +77,40 @@ class ActivityDetailView(APIView):
         activity.save()
 
         return Response({'detail': 'Activity completed. Points updated.'})
+    
+class RewardListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        rewards = Reward.objects.all()
+        data = []
+        for reward in rewards:
+            can_purchase = request.user.points >= reward.points_needed
+            data.append({
+                "id": reward.id,
+                "title": reward.title,
+                "points_needed": reward.points_needed,
+                "can_purchase": can_purchase,
+                "action": "Redeem" if can_purchase else "Earn more"
+            })
+        return Response(data)
+    
+class RedeemRewardView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        try:
+            reward = Reward.objects.get(pk=pk)
+        except Reward.DoesNotExist:
+            return Response({"detail": "Reward not found."}, status=404)
+
+        user = request.user
+        if user.points < reward.points_needed:
+            return Response({"detail": "Not enough points to redeem this reward."}, status=400)
+        
+        user.points -= reward.points_needed
+        user.save()
+
+        reward.redeemed_by.add(user)
+        reward.save()
+        return Response({"detail": "Reward redeemed successfully."})

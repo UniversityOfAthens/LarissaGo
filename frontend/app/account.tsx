@@ -1,12 +1,21 @@
+// MyAccount.tsx
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import tw from 'twrnc';
+import { useRouter } from 'expo-router';
+
+interface User {
+  username: string;
+  email: string;
+  points: number;
+}
 
 const MyAccount = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const API_URL = 'http://10.0.2.2:8000/api/my-account/';
 
@@ -60,9 +69,16 @@ const MyAccount = () => {
   return (
     <View style={tw`flex-1 p-4`}>
       <Text style={tw`text-xl mb-4`}>My Account</Text>
-      <Text style={tw`text-lg mb-2`}>Username: {user.username}</Text>
-      <Text style={tw`text-lg mb-2`}>My Email: {user.email}</Text>
-      <Text style={tw`text-lg`}>My Points: {user.points}</Text>
+      <Text style={tw`text-lg mb-2`}>Username: {user?.username}</Text>
+      <Text style={tw`text-lg mb-2`}>Email: {user?.email}</Text>
+      <Text style={tw`text-lg`}>Points: {user?.points}</Text>
+
+      <TouchableOpacity
+        style={tw`bg-blue-500 py-2 px-4 rounded mt-6`}
+        onPress={() => router.push('/rewards')}
+      >
+        <Text style={tw`text-white text-center text-lg`}>Redeem your points!</Text>
+      </TouchableOpacity>
     </View>
   );
 };

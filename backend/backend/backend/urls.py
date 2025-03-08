@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from api.views import signup, MyAccountView, ActivityListView, ActivityDetailView
+from api.views import signup, MyAccountView, ActivityListView, ActivityDetailView, RewardListView, RedeemRewardView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -16,4 +16,6 @@ urlpatterns = [
     path('api/my-account/', MyAccountView.as_view(), name='my-account'),
     path('api/activities/', ActivityListView.as_view(), name='activities'),
     path('api/activities/<int:pk>/', ActivityDetailView.as_view(), name='activity-detail'),
+    path('api/rewards/', RewardListView.as_view(), name='rewards'),
+    path('api/rewards/<int:pk>/', RedeemRewardView.as_view(), name='reward-redeem'),
 ]
