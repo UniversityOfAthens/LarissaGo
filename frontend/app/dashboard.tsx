@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import tw from 'twrnc';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import  '../style/main.css';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -18,7 +19,7 @@ export default function Dashboard() {
   };
 
   return (
-    <View style={tw`flex-1 h-14 bg-linear-to-t from-sky-500 to-indigo-500`}>
+    <View style={tw`flex-1 h-14 bg-linear-to-t from-sky-500 to-indigo-500 backgroundmain`}>
       {/* Header with the account icon */}
       <View style={tw`flex-row justify-between items-center p-4 border-b border-gray-200 rounded-sm`}>
         <Text style={tw`text-xl font-bold`}>Dashboard</Text>
