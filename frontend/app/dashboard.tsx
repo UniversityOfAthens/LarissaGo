@@ -18,7 +18,7 @@ export default function Dashboard() {
   };
 
   return (
-    <View style={tw`flex-1`}>
+    <View style={tw`flex-1 bg-blue-800`}>
       {/* Header with the account icon */}
       <View style={tw`flex-row justify-between items-center p-4 border-b border-gray-200`}>
         <Text style={tw`text-xl font-bold`}>Dashboard</Text>
