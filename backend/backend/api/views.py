@@ -42,7 +42,7 @@ class ActivityListView(APIView):
 
     def get(self, request):
         activities = Activity.objects.all()
-        serializer = ActivitySerializer(activities, many=True)
+        serializer = ActivitySerializer(activities, many=True, context={'request': request})
         return Response(serializer.data)
     
 class ActivityDetailView(APIView):
@@ -54,7 +54,9 @@ class ActivityDetailView(APIView):
         except Activity.DoesNotExist:
             return Response({'detail': 'Activity not found.'}, status=404)
         serializer = ActivitySerializer(activity)
-        return Response(serializer.data)
+        data = serializer.data
+        data['completed'] = request.user in activity.completed_by.all()
+        return Response(data)
 
     def post(self, request, pk):
         """

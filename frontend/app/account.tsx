@@ -76,7 +76,6 @@ const MyAccount = () => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
         if (!token) {
-          // If token isn't available, just exit.
           setRecLoading(false);
           return;
         }
@@ -113,6 +112,14 @@ const MyAccount = () => {
     fetchRecommendedActivities();
   }, []);
 
+  // Logout handler: clears token and redirects to index.tsx
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('accessToken');
+    // Optionally, remove the refresh token if you have it:
+    // await AsyncStorage.removeItem('refreshToken');
+    router.replace('/'); // Adjust the route if needed.
+  };
+
   if (loading) {
     return (
       <View style={tw`flex-1 justify-center items-center`}>
@@ -132,9 +139,7 @@ const MyAccount = () => {
   return (
     <ScrollView style={tw`flex-1 bg-blue-50`}>
       <TouchableOpacity
-        style={[
-          tw`absolute top-8 left-5 z-10 p-2 bg-white rounded-xl`,
-        ]}
+        style={tw`absolute top-8 left-5 z-10 p-2 bg-white rounded-xl`}
         onPress={() => router.push('/dashboard')}
       >
         <Text style={tw`font-bold text-black`}>Back</Text>
@@ -146,7 +151,6 @@ const MyAccount = () => {
           source={DEFAULT_AVATAR}
           style={tw`w-24 h-24 rounded-full mb-3`}
         />
-
         {/* User Info */}
         <Text style={tw`text-2xl font-bold text-gray-800`}>
           {user?.username || 'Guest User'}
@@ -154,7 +158,6 @@ const MyAccount = () => {
         <Text style={tw`text-base text-gray-700`}>
           {user?.email || 'No email'}
         </Text>
-
         {/* Points */}
         <View style={tw`mt-3 bg-white px-4 py-2 rounded-2xl`}>
           <Text style={tw`text-base text-gray-700`}>
@@ -173,7 +176,6 @@ const MyAccount = () => {
           >
             <Text style={tw`text-white font-semibold`}>Explore Activities</Text>
           </TouchableOpacity>
-
           <TouchableOpacity
             style={tw`bg-green-500 py-2 px-4 rounded-full`}
             onPress={() => router.push('/rewards')}
@@ -213,6 +215,14 @@ const MyAccount = () => {
             address, membership level, or anything else relevant to your app.
           </Text>
         </View>
+
+        {/* Logout Button */}
+        <TouchableOpacity
+          style={tw`bg-red-500 py-2 px-4 rounded-full mt-8 self-center`}
+          onPress={handleLogout}
+        >
+          <Text style={tw`text-white font-semibold`}>Log Out</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

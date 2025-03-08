@@ -38,17 +38,10 @@ const Login = () => {
       }
 
       const data = await response.json();
-      console.log(data);
-      // Save tokens using AsyncStorage
       await AsyncStorage.setItem('accessToken', data.access);
       await AsyncStorage.setItem('refreshToken', data.refresh);
 
-      Alert.alert('Login Successful', 'You are now logged in!', [
-        {
-          text: 'OK',
-          onPress: () => router.replace('/dashboard'),
-        },
-      ]);
+      router.replace('/dashboard')
     } catch (error) {
       console.error(error);
       Alert.alert('Error', 'An error occurred. Please try again later.');

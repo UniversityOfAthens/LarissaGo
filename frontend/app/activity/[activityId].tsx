@@ -25,6 +25,7 @@ interface ActivityData {
   time_hours?: number;  // Time in hours
   weather?: number;     // Weather indication
   star_rating?: number; // Star rating (e.g., out of 5)
+  completed?: boolean;  // Whether the user completed this activity
 }
 
 export default function ActivityDetailScreen() {
@@ -56,7 +57,6 @@ function ActivityDetailContent() {
           setLoading(false);
           return;
         }
-
         const response = await fetch(API_URL, {
           method: 'GET',
           headers: {
@@ -64,11 +64,9 @@ function ActivityDetailContent() {
             Authorization: `Bearer ${token}`,
           },
         });
-
         if (!response.ok) {
           throw new Error('Failed to fetch activity');
         }
-
         const data: ActivityData = await response.json();
         setActivity(data);
       } catch (err: any) {
@@ -77,7 +75,6 @@ function ActivityDetailContent() {
         setLoading(false);
       }
     };
-
     fetchActivity();
   }, [API_URL]);
 
@@ -95,11 +92,9 @@ function ActivityDetailContent() {
           Authorization: `Bearer ${token}`,
         },
       });
-
       if (!response.ok) {
         throw new Error('Failed to complete activity');
       }
-
       const resData = await response.json();
       Alert.alert('Success', resData.detail || 'Activity completed!');
       router.back();
@@ -135,6 +130,7 @@ function ActivityDetailContent() {
     time_hours,
     weather,
     star_rating,
+    completed,
   } = activity;
 
   // Default location
@@ -146,10 +142,8 @@ function ActivityDetailContent() {
   return (
     <ScrollView style={tw`bg-white`}>
       <TouchableOpacity
-        style={[
-          tw`absolute top-8 left-5 z-10 p-2 bg-white rounded-xl`,
-        ]}
-        onPress={() => router.push('/dashboard')}
+        style={tw`absolute top-8 left-5 z-10 p-2 bg-white rounded-xl`}
+        onPress={() => router.push('/activities')}
       >
         <Text style={tw`font-bold text-black`}>Back</Text>
       </TouchableOpacity>
@@ -210,7 +204,6 @@ function ActivityDetailContent() {
             {/* Time */}
             {time_hours !== undefined && (
               <View style={tw`flex-row items-center mr-4`}>
-                {/* Gray icon box */}
                 <View style={tw`w-8 h-8 bg-[#ececec] rounded-md mr-2 items-center justify-center`}>
                   <Image
                     source={clockIcon}
@@ -263,10 +256,13 @@ function ActivityDetailContent() {
           </Text>
         </View>
 
+        {/* Button */}
         <TouchableOpacity
           onPress={handleComplete}
+          disabled={completed}
           style={[
-            tw`absolute left-4 right-4 bg-[#1a1a1a] rounded-[20px] justify-center`,
+            tw`absolute left-4 right-4 rounded-[20px] justify-center`,
+            completed ? tw`bg-gray-500` : tw`bg-[#1a1a1a]`,
             {
               bottom: 20,
               height: 66,
@@ -279,7 +275,7 @@ function ActivityDetailContent() {
           ]}
         >
           <Text style={tw`text-white text-xl font-medium text-center`}>
-            Complete
+            {completed ? 'Completed' : 'Complete'}
           </Text>
         </TouchableOpacity>
       </View>

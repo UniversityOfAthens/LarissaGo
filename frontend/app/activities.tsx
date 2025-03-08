@@ -18,6 +18,7 @@ interface Activity {
   title: string | null;
   description: string;
   points: number;
+  completed?: boolean;  // Added optional property
 }
 
 interface PositionedActivity extends Activity {
@@ -197,7 +198,10 @@ const Activities = () => {
             style={{ width: canvasWidth, height: canvasHeight }}
           >
             {activities.map((item) => {
+              // For completed activities, use a random colorful background.
+              // Otherwise, use white.
               const randomColor = `hsl(${Math.random() * 360}, 70%, 80%)`;
+              const fillColor = item.completed ? randomColor : "#ffffff";
               const path = getPolygonPath(item.width, item.height);
 
               return (
@@ -211,7 +215,7 @@ const Activities = () => {
                   }}
                 >
                   <Svg width={item.width} height={item.height}>
-                    <Path d={path} fill={randomColor} />
+                    <Path d={path} fill={fillColor} />
                     <SVGText
                       x={item.width / 2}
                       y={item.height / 2}
