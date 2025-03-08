@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
+import { View, Text, TextInput, Button, Alert, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import tw from 'twrnc';
+import { useRouter } from 'expo-router';
 
 const Signup = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const handleSignup = async () => {
     try {
@@ -30,6 +32,10 @@ const Signup = () => {
       console.error(error);
       Alert.alert('Error', 'An error occurred. Please try again later.');
     }
+  };
+
+  const handleLoginNavigation = () => {
+    router.push('/login');
   };
 
   return (
@@ -58,6 +64,13 @@ const Signup = () => {
         style={tw`border border-gray-300 mb-5 p-2`}
       />
       <Button title="Sign Up" onPress={handleSignup} />
+
+      {/* Link to navigate to login.tsx */}
+      <TouchableOpacity onPress={handleLoginNavigation} style={tw`mt-4`}>
+        <Text style={tw`text-blue-500 text-center`}>
+          Already have an account?
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
