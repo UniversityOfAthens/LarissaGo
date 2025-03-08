@@ -18,15 +18,18 @@ export default function Dashboard() {
   };
 
   return (
-    <View style={tw`flex-1 bg-blue-800`}>
+    <View style={tw`flex-1 bg-green-200`}>
       {/* Header with the account icon */}
-      <View style={tw`flex-row justify-between items-center p-4 border-b border-gray-200`}>
+      <View style={tw`flex-row justify-between items-center p-4 border-b border-gray-200 rounded-sm`}>
         <Text style={tw`text-xl font-bold`}>Dashboard</Text>
         <TouchableOpacity>
           <Ionicons name="person-circle-outline" size={32} color="black"
           onPress={handleAccountPress} />
         </TouchableOpacity>
       </View>
+      
+      
+      <View style={tw 'flex-auto items-center'}></>
 
       <View style={tw`flex-1 justify-center items-center`}>
         <TouchableOpacity 
