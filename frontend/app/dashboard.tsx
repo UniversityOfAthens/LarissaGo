@@ -13,8 +13,7 @@ export default function Dashboard() {
 
   // Optionally, you can add a handler for the "Play" button if needed.
   const handlePlayPress = () => {
-    // Navigate to the game screen or perform any action.
-    console.log('Play pressed');
+    router.push('/activities'); 
   };
 
   return (
@@ -33,7 +32,8 @@ export default function Dashboard() {
 
       <View style={tw`flex-1 justify-center items-center`}>
         <TouchableOpacity 
-          style={tw`bg-blue-500 py-3 px-8 rounded`} 
+          style={tw`bg-blue-500 py-3 px-8 rounded`}
+          onPress={handlePlayPress} 
         >
           <Text style={tw`text-white text-2xl`}>Play</Text>
         </TouchableOpacity>
