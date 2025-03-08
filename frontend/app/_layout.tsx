@@ -33,27 +33,45 @@ export default function RootLayout() {
         {/* Add your new screens here */}
         <Stack.Screen 
           name="login" 
-          options={{ title: 'Login' }} 
+          options={{ 
+            title: 'Login',
+            headerShown: false
+          }} 
         />
         <Stack.Screen 
           name="signup" 
-          options={{ title: 'Sign Up' }} 
+          options={{ 
+            title: 'Sign Up',
+            headerShown: false
+          }} 
         />
         <Stack.Screen 
           name="dashboard" 
-          options={{ title: 'Dashboard' }}
+          options={{ 
+            title: 'Dashboard',
+            headerShown: false
+          }}
         />
         <Stack.Screen
           name="account"
-          options={{ title: 'Account' }}
+          options={{ 
+            title: 'Account',
+            headerShown: false 
+          }}
         />
         <Stack.Screen 
           name="activities"
-          options={{ title: 'Activities' }}
+          options={{ 
+            title: 'Activities',
+            headerShown: false
+          }}
         />
         <Stack.Screen 
           name="rewards"
-          options={{ title: 'Rewards' }}
+          options={{ 
+            title: 'Rewards',
+            headerShown: false
+          }}
         />
         {/* Existing screens */}
         <Stack.Screen 

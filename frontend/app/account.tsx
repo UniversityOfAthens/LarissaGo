@@ -1,4 +1,3 @@
-// MyAccount.tsx
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -21,14 +20,25 @@ interface User {
   points: number;
 }
 
+interface Activity {
+  id: number;
+  title: string | null;
+  description: string;
+  points: number;
+}
+
 const MyAccount = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [recommendedActivities, setRecommendedActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [recLoading, setRecLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const API_URL = 'http://10.0.2.2:8000/api/my-account/';
+  const API_USER_URL = 'http://10.0.2.2:8000/api/my-account/';
+  const API_ACTIVITIES_URL = 'http://10.0.2.2:8000/api/activities/';
 
+  // Fetch user data
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -38,7 +48,7 @@ const MyAccount = () => {
           setLoading(false);
           return;
         }
-        const response = await fetch(API_URL, {
+        const response = await fetch(API_USER_URL, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -60,6 +70,49 @@ const MyAccount = () => {
     fetchUserData();
   }, []);
 
+  // Fetch activities for the "Activities Just For You" section
+  useEffect(() => {
+    const fetchRecommendedActivities = async () => {
+      try {
+        const token = await AsyncStorage.getItem('accessToken');
+        if (!token) {
+          // If token isn't available, just exit.
+          setRecLoading(false);
+          return;
+        }
+        const response = await fetch(API_ACTIVITIES_URL, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch activities');
+        }
+        const data: Activity[] = await response.json();
+        let recs: Activity[] = [];
+        if (data.length <= 2) {
+          recs = data;
+        } else {
+          // Pick two distinct random activities
+          const indices = new Set<number>();
+          while (indices.size < 2) {
+            indices.add(Math.floor(Math.random() * data.length));
+          }
+          recs = Array.from(indices).map((idx) => data[idx]);
+        }
+        setRecommendedActivities(recs);
+      } catch (err: any) {
+        console.error(err.message);
+      } finally {
+        setRecLoading(false);
+      }
+    };
+
+    fetchRecommendedActivities();
+  }, []);
+
   if (loading) {
     return (
       <View style={tw`flex-1 justify-center items-center`}>
@@ -78,6 +131,14 @@ const MyAccount = () => {
 
   return (
     <ScrollView style={tw`flex-1 bg-blue-50`}>
+      <TouchableOpacity
+        style={[
+          tw`absolute top-8 left-5 z-10 p-2 bg-white rounded-xl`,
+        ]}
+        onPress={() => router.push('/dashboard')}
+      >
+        <Text style={tw`font-bold text-black`}>Back</Text>
+      </TouchableOpacity>
       {/* Header Section (Profile Info) */}
       <View style={tw`bg-green-300 p-6 rounded-b-3xl items-center`}>
         {/* Avatar */}
@@ -121,27 +182,28 @@ const MyAccount = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Example Section: Activities Just for You */}
+        {/* Activities Just For You */}
         <Text style={tw`text-lg font-bold text-gray-800 mb-3`}>
           Activities Just For You
         </Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {/* In a real app, you'd map over some random or recommended activities */}
-          <View style={tw`bg-white mr-3 p-4 rounded-lg w-48`}>
-            <Text style={tw`text-base font-bold mb-1`}>Activity 1</Text>
-            <Text style={tw`text-sm text-gray-600`}>Short description here</Text>
-          </View>
-          <View style={tw`bg-white mr-3 p-4 rounded-lg w-48`}>
-            <Text style={tw`text-base font-bold mb-1`}>Activity 2</Text>
-            <Text style={tw`text-sm text-gray-600`}>Short description here</Text>
-          </View>
-          <View style={tw`bg-white mr-3 p-4 rounded-lg w-48`}>
-            <Text style={tw`text-base font-bold mb-1`}>Activity 3</Text>
-            <Text style={tw`text-sm text-gray-600`}>Short description here</Text>
-          </View>
-        </ScrollView>
+        {recLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {recommendedActivities.map((activity) => (
+              <View key={activity.id} style={tw`bg-white mr-3 p-4 rounded-lg w-48`}>
+                <Text style={tw`text-base font-bold mb-1`}>
+                  {activity.title || 'Untitled'}
+                </Text>
+                <TouchableOpacity onPress={() => router.push(`/activity/${activity.id}`)}>
+                  <Text style={tw`text-blue-500 font-semibold`}>Learn more</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </ScrollView>
+        )}
 
-        {/* Other sections / user data if needed */}
+        {/* Additional Info Section */}
         <View style={tw`mt-6`}>
           <Text style={tw`text-lg font-bold text-gray-800 mb-2`}>
             Additional Info

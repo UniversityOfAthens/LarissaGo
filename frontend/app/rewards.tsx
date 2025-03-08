@@ -166,11 +166,19 @@ const Rewards = () => {
 
   return (
     <View style={tw`flex-1 p-4`}>
-      <Text style={tw`text-xl mb-4`}>Available Rewards</Text>
+      <TouchableOpacity
+        style={[
+          tw`absolute top-8 left-5 z-10 p-2 bg-white rounded-xl`,
+        ]}
+        onPress={() => router.push('/dashboard')}
+      >
+        <Text style={tw`font-bold text-black`}>Back</Text>
+      </TouchableOpacity>
       <FlatList
         data={rewards}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderReward}
+        style={tw`mt-20`}
       />
     </View>
   );

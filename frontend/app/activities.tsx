@@ -4,7 +4,9 @@ import {
   Text,
   ActivityIndicator,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  ScrollView,
+  ImageBackground
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import tw from 'twrnc';
@@ -13,7 +15,7 @@ import { useRouter } from 'expo-router';
 
 interface Activity {
   id: number;
-  title: string | null;   // Title can be string or null/undefined
+  title: string | null;
   description: string;
   points: number;
 }
@@ -43,29 +45,24 @@ function findNonOverlappingPosition(
   shapeWidth: number,
   shapeHeight: number,
   placed: PositionedActivity[],
-  screenWidth: number,
-  screenHeight: number,
+  canvasWidth: number,
+  canvasHeight: number,
   maxAttempts = 50
 ) {
-  // We'll try up to `maxAttempts` times
   for (let i = 0; i < maxAttempts; i++) {
     // Keep a 20px margin from edges
     const minX = 20;
-    const maxX = screenWidth - shapeWidth - 20;
+    const maxX = canvasWidth - shapeWidth - 20;
     const minY = 20;
-    const maxY = screenHeight - shapeHeight - 20;
+    const maxY = canvasHeight - shapeHeight - 20;
 
-    // If there's not enough space, bail out
     if (maxX < minX || maxY < minY) {
-      // We'll place at 0,0 as a fallback
-      return { x: 0, y: 0 };
+      return { x: 20, y: 20 };
     }
 
-    // Pick random x,y
     const x = minX + Math.random() * (maxX - minX);
     const y = minY + Math.random() * (maxY - minY);
 
-    // Check overlap
     let overlapFound = false;
     for (const p of placed) {
       if (boxesOverlap(x, y, shapeWidth, shapeHeight, p.x, p.y, p.width, p.height)) {
@@ -75,21 +72,16 @@ function findNonOverlappingPosition(
     }
 
     if (!overlapFound) {
-      // Found a valid position
       return { x, y };
     }
   }
-
-  // If all attempts fail, fallback to (20, 20)
   return { x: 20, y: 20 };
 }
 
 // Compute polygon path
 function getPolygonPath(width: number, height: number) {
-  // Guard in case something is NaN
   const safeW = isNaN(width) ? 100 : width;
   const safeH = isNaN(height) ? 60 : height;
-
   return `
     M 10,0
     L ${safeW - 10},0
@@ -107,8 +99,11 @@ const Activities = () => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  // Screen dimensions
+  // Get screen dimensions
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+  // Define a larger canvas for scrolling (e.g., 2x screen size)
+  const canvasWidth = screenWidth * 2;
+  const canvasHeight = screenHeight * 2;
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -134,25 +129,20 @@ const Activities = () => {
         const placed: PositionedActivity[] = [];
 
         data.forEach((item) => {
-          // Guard the title
           const safeTitle = typeof item.title === 'string' ? item.title : 'Untitled';
-
-          // Compute shape dimensions
           const shapeWidth = Math.max(100, safeTitle.length * 12);
           const shapeHeight = 60;
-
-          // Find a non-overlapping position
           const { x, y } = findNonOverlappingPosition(
             shapeWidth,
             shapeHeight,
             placed,
-            screenWidth,
-            screenHeight
+            canvasWidth,
+            canvasHeight
           );
 
           placed.push({
             ...item,
-            title: safeTitle, // store the guarded title
+            title: safeTitle,
             x,
             y,
             width: shapeWidth,
@@ -169,7 +159,7 @@ const Activities = () => {
     };
 
     fetchActivities();
-  }, [screenWidth, screenHeight]);
+  }, [canvasWidth, canvasHeight]);
 
   if (loading) {
     return (
@@ -188,43 +178,58 @@ const Activities = () => {
   }
 
   return (
-    <View style={tw`flex-1 bg-white`}>
-      {activities.map((item) => {
-        // Generate a random pastel color
-        const randomColor = `hsl(${Math.random() * 360}, 70%, 80%)`;
+    <View style={tw`flex-1`}>
+      <TouchableOpacity
+        style={[
+          tw`absolute top-8 left-5 z-10 p-2 bg-white rounded-xl`,
+        ]}
+        onPress={() => router.push('/dashboard')}
+      >
+        <Text style={tw`font-bold text-black`}>Back</Text>
+      </TouchableOpacity>
 
-        // Build the polygon path
-        const path = getPolygonPath(item.width, item.height);
-
-        return (
-          <TouchableOpacity
-            key={item.id}
-            onPress={() => router.push(`/activity/${item.id}`)}
-            style={[
-              {
-                position: 'absolute',
-                left: item.x,
-                top: item.y,
-              },
-            ]}
+      {/* Outer ScrollView for horizontal scrolling */}
+      <ScrollView horizontal>
+        {/* Inner ScrollView for vertical scrolling */}
+        <ScrollView contentContainerStyle={{ width: canvasWidth, height: canvasHeight }}>
+          <ImageBackground
+            source={require('../public/map.png')}
+            style={{ width: canvasWidth, height: canvasHeight }}
           >
-            <Svg width={item.width} height={item.height}>
-              <Path d={path} fill={randomColor} />
-              <SVGText
-                x={item.width / 2}
-                y={item.height / 2}
-                fill="black"
-                fontSize="16"
-                fontWeight="bold"
-                textAnchor="middle"
-                alignmentBaseline="middle"
-              >
-                {item.title}
-              </SVGText>
-            </Svg>
-          </TouchableOpacity>
-        );
-      })}
+            {activities.map((item) => {
+              const randomColor = `hsl(${Math.random() * 360}, 70%, 80%)`;
+              const path = getPolygonPath(item.width, item.height);
+
+              return (
+                <TouchableOpacity
+                  key={item.id}
+                  onPress={() => router.push(`/activity/${item.id}`)}
+                  style={{
+                    position: 'absolute',
+                    left: item.x,
+                    top: item.y,
+                  }}
+                >
+                  <Svg width={item.width} height={item.height}>
+                    <Path d={path} fill={randomColor} />
+                    <SVGText
+                      x={item.width / 2}
+                      y={item.height / 2}
+                      fill="black"
+                      fontSize="16"
+                      fontWeight="bold"
+                      textAnchor="middle"
+                      alignmentBaseline="middle"
+                    >
+                      {item.title}
+                    </SVGText>
+                  </Svg>
+                </TouchableOpacity>
+              );
+            })}
+          </ImageBackground>
+        </ScrollView>
+      </ScrollView>
     </View>
   );
 };

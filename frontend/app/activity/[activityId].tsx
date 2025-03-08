@@ -1,19 +1,43 @@
-// activity/[activityId].tsx
 import React, { useState, useEffect } from 'react';
-import { View, Text, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  TouchableOpacity,
+  Alert,
+  Image,
+  ScrollView,
+  Dimensions
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import tw from 'twrnc';
+import clockIcon from './../../public/icons/clock.png';
+import cloudIcon from './../../public/icons/cloud.png';
+import starIcon from './../../public/icons/star.png';
 
 interface ActivityData {
   id: number;
   title: string;
   description: string;
   points: number;
+  image?: string;       // URL to the image
+  time_hours?: number;  // Time in hours
+  weather?: number;     // Weather indication
+  star_rating?: number; // Star rating (e.g., out of 5)
 }
 
 export default function ActivityDetailScreen() {
-  // Get dynamic parameter from the URL
+  // Remove header by setting headerShown to false
+  return (
+    <>
+      <Stack.Screen options={{ headerShown: false }} />
+      <ActivityDetailContent />
+    </>
+  );
+}
+
+function ActivityDetailContent() {
   const { activityId } = useLocalSearchParams<{ activityId: string }>();
   const router = useRouter();
 
@@ -102,17 +126,163 @@ export default function ActivityDetailScreen() {
     );
   }
 
+  // Destructure the fields for convenience
+  const {
+    title,
+    description,
+    points,
+    image,
+    time_hours,
+    weather,
+    star_rating,
+  } = activity;
+
+  // Default location
+  const location = 'Larisa';
+
+  // For responsive design, get the screen height
+  const { height: screenHeight } = Dimensions.get('window');
+
   return (
-    <View style={tw`flex-1 p-4`}>
-      <Text style={tw`text-2xl font-bold mb-4`}>{activity.title}</Text>
-      <Text style={tw`text-base mb-4`}>{activity.description}</Text>
-      <Text style={tw`text-lg mb-8`}>Points: {activity.points}</Text>
+    <ScrollView style={tw`bg-white`}>
       <TouchableOpacity
-        style={tw`bg-blue-500 py-3 px-6 rounded`}
-        onPress={handleComplete}
+        style={[
+          tw`absolute top-8 left-5 z-10 p-2 bg-white rounded-xl`,
+        ]}
+        onPress={() => router.push('/dashboard')}
       >
-        <Text style={tw`text-white text-lg text-center`}>Complete</Text>
+        <Text style={tw`font-bold text-black`}>Back</Text>
       </TouchableOpacity>
-    </View>
+      <View style={tw`flex-1 rounded-[50px] overflow-hidden`}>
+        <View style={[tw`w-full relative items-center`, { height: screenHeight * 0.5 }]}>
+          {/* Actual image */}
+          {image ? (
+            <Image
+              source={{ uri: `http://10.0.2.2:8000${image}` }}
+              style={tw`absolute w-full h-full`}
+              resizeMode="cover"
+            />
+          ) : (
+            <Image
+              source={{ uri: 'https://placehold.co/400x400' }}
+              style={tw`absolute w-[200px] h-[200px]`}
+              resizeMode="cover"
+            />
+          )}
+
+          <View
+            style={[
+              tw`absolute mx-4 rounded-[15px] p-4 flex-row justify-between`,
+              {
+                top: 355,
+                backgroundColor: 'rgba(29, 29, 29, 0.5)',
+              },
+            ]}
+          >
+            {/* Left side: Title + Location (stacked) */}
+            <View>
+              <Text style={tw`text-white text-2xl pr-4 font-semibold`}>
+                {title}
+              </Text>
+              <Text style={tw`text-gray-300 text-lg mt-1`}>
+                {location}
+              </Text>
+            </View>
+
+            {/* Right side: "Points" label + value (stacked, aligned right) */}
+            <View style={tw`items-end`}>
+              <Text style={tw`text-gray-300 text-base`}>Points</Text>
+              <Text style={tw`text-gray-300 text-2xl font-medium`}>
+                {points}
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Main content (below the image) */}
+        <View style={tw`px-6 pt-6`}>
+          <Text style={tw`text-[22px] font-semibold text-[#1b1b1b] mb-2`}>
+            {title}
+          </Text>
+
+          {/* Row with time_hours, weather, star_rating */}
+          <View style={tw`flex-row items-center mb-4`}>
+            {/* Time */}
+            {time_hours !== undefined && (
+              <View style={tw`flex-row items-center mr-4`}>
+                {/* Gray icon box */}
+                <View style={tw`w-8 h-8 bg-[#ececec] rounded-md mr-2 items-center justify-center`}>
+                  <Image
+                    source={clockIcon}
+                    style={{ width: 16, height: 16 }}
+                    resizeMode="contain"
+                  />
+                </View>
+                <Text style={tw`text-[#7e7e7e] text-lg`}>
+                  {time_hours} hours
+                </Text>
+              </View>
+            )}
+
+            {/* Weather */}
+            {weather !== undefined && (
+              <View style={tw`flex-row items-center mr-4`}>
+                <View style={tw`w-8 h-8 bg-[#ececec] rounded-md mr-2 items-center justify-center`}>
+                  <Image
+                    source={cloudIcon}
+                    style={{ width: 16, height: 16 }}
+                    resizeMode="contain"
+                  />
+                </View>
+                <Text style={tw`text-[#7e7e7e] text-lg`}>
+                  {weather} °C
+                </Text>
+              </View>
+            )}
+
+            {/* Star Rating */}
+            {star_rating !== undefined && (
+              <View style={tw`flex-row items-center`}>
+                <View style={tw`w-8 h-8 bg-[#ececec] rounded-md mr-2 items-center justify-center`}>
+                  <Image
+                    source={starIcon}
+                    style={{ width: 16, height: 16 }}
+                    resizeMode="contain"
+                  />
+                </View>
+                <Text style={tw`text-[#7e7e7e] text-lg`}>
+                  {star_rating}
+                </Text>
+              </View>
+            )}
+          </View>
+
+          {/* Description */}
+          <Text style={tw`text-[#a4a4a4] text-base leading-6 mb-24`}>
+            {description || 'No description provided.'}
+          </Text>
+        </View>
+
+        <TouchableOpacity
+          onPress={handleComplete}
+          style={[
+            tw`absolute left-4 right-4 bg-[#1a1a1a] rounded-[20px] justify-center`,
+            {
+              bottom: 20,
+              height: 66,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 13 },
+              shadowOpacity: 0.12,
+              shadowRadius: 26,
+              elevation: 5,
+            },
+          ]}
+        >
+          <Text style={tw`text-white text-xl font-medium text-center`}>
+            Complete
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 }
