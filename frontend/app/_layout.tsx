@@ -53,52 +53,52 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack initialRouteName={isAuthenticated ? "dashboard" : "login"}>
-        <Stack.Screen 
-          name="login" 
-          options={{ 
+        <Stack.Screen
+          name="login"
+          options={{
             title: 'Login',
             headerShown: false,
-          }} 
+          }}
         />
-        <Stack.Screen 
-          name="signup" 
-          options={{ 
+        <Stack.Screen
+          name="signup"
+          options={{
             title: 'Sign Up',
             headerShown: false,
-          }} 
+          }}
         />
-        <Stack.Screen 
-          name="dashboard" 
-          options={{ 
+        <Stack.Screen
+          name="dashboard"
+          options={{
             title: 'Dashboard',
             headerShown: false,
           }}
         />
         <Stack.Screen
           name="account"
-          options={{ 
+          options={{
             title: 'Account',
             headerShown: false,
           }}
         />
-        <Stack.Screen 
+        <Stack.Screen
           name="activities"
-          options={{ 
+          options={{
             title: 'Activities',
             headerShown: false,
           }}
         />
-        <Stack.Screen 
+        <Stack.Screen
           name="rewards"
-          options={{ 
+          options={{
             title: 'Rewards',
             headerShown: false,
           }}
         />
         {/* Additional screens */}
-        <Stack.Screen 
-          name="(tabs)" 
-          options={{ headerShown: false }} 
+        <Stack.Screen
+          name="(tabs)"
+          options={{ headerShown: false }}
         />
         <Stack.Screen name="+not-found" />
       </Stack>

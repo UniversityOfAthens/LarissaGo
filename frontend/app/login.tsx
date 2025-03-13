@@ -78,18 +78,18 @@ const Login = () => {
           style={tw`border rounded-lg border-gray-300 mb-5 p-2`}
         />
 
-      <TouchableOpacity
-        style={tw`bg-blue-500 rounded-full py-3 px-6`}
-        onPress={handleLogin}
-      >
-        <Text style={tw`text-white text-center text-lg`}>Login</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={tw`bg-blue-500 rounded-full py-3 px-6`}
+          onPress={handleLogin}
+        >
+          <Text style={tw`text-white text-center text-lg`}>Login</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity onPress={handleSignupNavigation} style={tw`mt-4`}>
-        <Text style={tw`text-blue-500 text-center`}>
-          Don't have an account? Sign up
-        </Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={handleSignupNavigation} style={tw`mt-4`}>
+          <Text style={tw`text-blue-500 text-center`}>
+            Don't have an account? Sign up
+          </Text>
+        </TouchableOpacity>
 
       </View>
     </View>

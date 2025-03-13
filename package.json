@@ -1,15 +1,14 @@
 {
-    "name": "larissago",
-    "version": "1.0.0",
-    "private": true,
-    "scripts": {
-      "prestart": "bash setup.sh",
-      "start:backend": "cd backend/backend && ../venv/bin/python manage.py runserver",
-      "start:frontend": "cd frontend && npm run android",
-      "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\""
-    },
-    "devDependencies": {
-      "concurrently": "^7.6.0"
-    }
+  "name": "larissago",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "prestart": "bash setup.sh",
+    "start:backend": "cd backend/backend && ../venv/bin/python manage.py runserver",
+    "start:frontend": "cd frontend && npm run android",
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
   }
-  
+}

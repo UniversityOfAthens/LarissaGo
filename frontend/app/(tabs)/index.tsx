@@ -10,10 +10,10 @@ const Home = () => {
     <View style={tw`flex-1 bg-white`}>
       {/* Top container with an image, curved bottom border */}
       <View style={styles.imageContainer}>
-      <Image
-        source={require('./../../public/larisa.jpg')}
-        style={styles.image}
-      />
+        <Image
+          source={require('./../../public/larisa.jpg')}
+          style={styles.image}
+        />
       </View>
 
       {/* Content section */}

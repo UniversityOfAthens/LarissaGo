@@ -211,7 +211,7 @@ const MyAccount = () => {
             Additional Info
           </Text>
           <Text style={tw`text-sm text-gray-600`}>
-            Here you could display more fields about the user, e.g. phone number, 
+            Here you could display more fields about the user, e.g. phone number,
             address, membership level, or anything else relevant to your app.
           </Text>
         </View>

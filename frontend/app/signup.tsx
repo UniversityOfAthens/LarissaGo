@@ -14,7 +14,7 @@ import { useRouter } from 'expo-router';
 
 const Signup = () => {
   const [username, setUsername] = useState('');
-  const [email, setEmail]       = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
 
