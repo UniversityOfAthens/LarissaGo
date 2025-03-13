@@ -63,10 +63,10 @@ depends on core.js for utility functions like removeChildren or quickElement
             pgettext('one letter Saturday', 'S')
         ],
         firstDayOfWeek: parseInt(get_format('FIRST_DAY_OF_WEEK')),
-        isLeapYear: function(year) {
-            return (((year % 4) === 0) && ((year % 100) !== 0 ) || ((year % 400) === 0));
+        isLeapYear: function (year) {
+            return (((year % 4) === 0) && ((year % 100) !== 0) || ((year % 400) === 0));
         },
-        getDaysInMonth: function(month, year) {
+        getDaysInMonth: function (month, year) {
             let days;
             if (month === 1 || month === 3 || month === 5 || month === 7 || month === 8 || month === 10 || month === 12) {
                 days = 31;
@@ -82,7 +82,7 @@ depends on core.js for utility functions like removeChildren or quickElement
             }
             return days;
         },
-        draw: function(month, year, div_id, callback, selected) { // month = 1-12, year = 1-9999
+        draw: function (month, year, div_id, callback, selected) { // month = 1-12, year = 1-9999
             const today = new Date();
             const todayDay = today.getDate();
             const todayMonth = today.getMonth() + 1;
@@ -192,20 +192,20 @@ depends on core.js for utility functions like removeChildren or quickElement
         }
     }
     Calendar.prototype = {
-        drawCurrent: function() {
+        drawCurrent: function () {
             CalendarNamespace.draw(this.currentMonth, this.currentYear, this.div_id, this.callback, this.selected);
         },
-        drawDate: function(month, year, selected) {
+        drawDate: function (month, year, selected) {
             this.currentMonth = month;
             this.currentYear = year;
 
-            if(selected) {
+            if (selected) {
                 this.selected = selected;
             }
 
             this.drawCurrent();
         },
-        drawPreviousMonth: function() {
+        drawPreviousMonth: function () {
             if (this.currentMonth === 1) {
                 this.currentMonth = 12;
                 this.currentYear--;
@@ -215,7 +215,7 @@ depends on core.js for utility functions like removeChildren or quickElement
             }
             this.drawCurrent();
         },
-        drawNextMonth: function() {
+        drawNextMonth: function () {
             if (this.currentMonth === 12) {
                 this.currentMonth = 1;
                 this.currentYear++;
@@ -225,11 +225,11 @@ depends on core.js for utility functions like removeChildren or quickElement
             }
             this.drawCurrent();
         },
-        drawPreviousYear: function() {
+        drawPreviousYear: function () {
             this.currentYear--;
             this.drawCurrent();
         },
-        drawNextYear: function() {
+        drawNextYear: function () {
             this.currentYear++;
             this.drawCurrent();
         }

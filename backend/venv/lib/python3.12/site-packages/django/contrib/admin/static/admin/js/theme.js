@@ -40,7 +40,7 @@
         currentTheme ? setTheme(currentTheme) : setTheme("auto");
     }
 
-    window.addEventListener('load', function(_) {
+    window.addEventListener('load', function (_) {
         const buttons = document.getElementsByClassName("theme-toggle");
         Array.from(buttons).forEach((btn) => {
             btn.addEventListener("click", cycleTheme);
